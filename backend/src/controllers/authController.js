@@ -101,3 +101,20 @@ export const signIn = async (req, res) => {
     return res.status(500).json({ message: "lỗi hệ thống" });
   }
 };
+
+export const signOut = async (req, res) => {
+  try {
+    // lấy refresh token tù cookie
+    const token = req.cookie?.refreshToken;
+
+    if (token) {
+      // xóa refresh token trong Session
+      await Session.deleteOne({ refreshToken: token });
+      // xóa refresh token trong cookie
+      res.clearCookie("refreshToken");
+    }
+  } catch (error) {
+    console.log("lỗi khi gọi SignOut", error);
+    return res.status(500).json({ message: "lỗi hệ thống" });
+  }
+};
